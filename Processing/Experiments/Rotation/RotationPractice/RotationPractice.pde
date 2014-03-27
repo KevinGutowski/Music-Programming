@@ -1,10 +1,10 @@
 float angle = 0;
 float r = 25; //radii of outer rotating circles
 float rtwo = 3; //radii of golden circles
-float n = 100;
+float n = 100; //number of golden circles
 
 void setup() {
-  size(600,600);
+  size(500,500);
   background(59, 79, 88);
 }
 
@@ -46,11 +46,5 @@ void draw() {
   angle = (.005*PI + angle)%(2*PI);
   println(150*cos(2*PI/3));
   popMatrix();
-  
-  
-  
-  
-  
-  
-  
+   
 }
