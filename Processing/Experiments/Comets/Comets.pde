@@ -1,5 +1,3 @@
-import gifAnimation.*;
-GifMaker gifExport;
 
 float randx = width/2;
 float randy = height/2;
