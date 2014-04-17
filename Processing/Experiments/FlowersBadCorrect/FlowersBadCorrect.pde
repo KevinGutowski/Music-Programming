@@ -7,9 +7,10 @@ float t = 1;
 int nprime = 1;
 
 void setup() {
-  size(800,800);  
+  size(400,400);  
   background(255);
   noStroke();
+
  
 }
 
@@ -29,12 +30,12 @@ void circles() {
   
   for (int n = 1; n < nprime*3; n++) {;
     float r = c*sqrt(n);
-    float radius = 3;
+    float radius = 9;
     float theta = n*PI*(3-sqrt(5));
     fill(62,map(r/2,1,width,0,200),138,100);
     float pulse = pow(sin(t*PI/3-n*PI/(t%100)),1.5);
     pushMatrix();
-    ellipse(r*cos(theta)/4,r*sin(theta)/4,pulse*radius+6,pulse*radius+6);
+    ellipse(r*cos(theta)/4,r*sin(theta)/4,pulse*radius,pulse*radius);
     popMatrix();
   }
 }
