@@ -4,17 +4,19 @@ float [] posy = new float[num];
 float [] rad = new float[num];
 int [] filler = new int[num];
 
+boolean tester = false;
+
+float T = 0;
+
 //globals for Shimmering Stars
 float t = 0;
 
-//gloals for CircleDrops
-int r = 0;
-float percent = 0;
-float fx = 0;
-float radius = 0;
-
-
-ArrayList<Circle> drops;
+//Spring Constants
+float finalRadius = 100;
+float dampConstant = 0.19;
+float springConstant = .9;
+float velocity = 0;
+float position = 0;
 
 
 void setup() {
@@ -22,7 +24,6 @@ void setup() {
 
   background(0);
   noStroke();
-  drops=new ArrayList();
   for (int i = 0; i < num; i++) {
     posx[i] = int(random(0, width));
     posy[i] = int(random(0, height));
@@ -39,6 +40,39 @@ void draw() {
   background(0);
   //pushMatrix(); Add rotation? * If add rotation need to kill ellipses out of screen and generate new ones offscreen
   t = t + 0.005;
+  
+
+  
+
+  //Phrase 1
+  stroke(255);
+  noFill();
+  drawParabL(width/2,height*3/4);
+  drawParabR(width/2,height*3/4);
+  println(frameRate);
+  //if (tester == true) {
+    T++;
+    finalRadius = min(100, exp(T*0.15));
+    float acceleration = springConstant*(finalRadius - position) - dampConstant*velocity;
+    velocity += acceleration;
+    position += velocity;
+    drawParabL(width/2-position,height*3/4);
+    drawParabR(width/2-position,height*3/4);
+
+    
+    /*
+    drawParabL(width/2-20,height*3/4);
+    drawParabR(width/2-20,height*3/4);
+    
+    drawParabL(width/2+20,height*3/4);
+    drawParabR(width/2+20,height*3/4);
+    
+    drawParabL(width/2+40,height*3/4);
+    drawParabR(width/2+40,height*3/4);
+    */
+  //}
+  
+  
   //rotate(t*PI/500); *
   //shimmer
   for (int i = 0; i < num; i++) {
@@ -54,70 +88,80 @@ void draw() {
   }
   //popMatrix(); *
 
-
-  //Phrase 1
-  for (int i=0; i<drops.size(); i++) {
-    Circle drop=drops.get(i);
-    drop.display();
-    drop.movement();
-  } 
-  if (frameCount>100) {
-    if (frameCount%100 == 1) {
-      drops.add(new Circle(width/2, height/2, r, radius));
-    }
-  }
   
-  if (frameCount>400) {
-    if (frameCount%100 == 1) {
-      drops.add(new Circle(0, 0, r, radius));
-    }
-  }
-  
-  if (frameCount>800) {
-    if (frameCount%100 == 1) {
-      drops.add(new Circle(width, 0, r, radius));
-    }
-  }
-  
-  if (frameCount>1200) {
-    if (frameCount%100 == 1) {
-      drops.add(new Circle(0, height, r, radius));
-    }
-  }
-  
-  if (frameCount>1600) {
-    if (frameCount%100 == 1) {
-      drops.add(new Circle(width, height, r, radius));
-    }
-  }
 }
 
-class Circle {
-  float rad;
-  float x;
-  float y;
-  Circle(float tempX, float tempY, float tempR, float tempRadius) {
-    x = tempX;
-    y = tempY;
-    rad = tempR;
-    radius = tempRadius;
-  }
+void drawParabR(float posX, float posY) {
+  pushMatrix();
 
-  void display() {
-    noFill();
-    strokeWeight(2);
-    stroke(255, 255, 255, 255-radius/4);
-    ellipse(x, y, radius, radius);
-  }
-
-  void movement() {
-    rad++;
-    percent = map(rad, 0, 1000, 0, 1);
-    fx = 1 - exp(-4*percent*percent);
-    radius = lerp(0, width*2, fx);
-    if (255-rad/2==0) {
-      drops.remove(0);
+  translate(posX, posY);
+  rotate(PI);
+  float x = 0;
+  float y = height/2;
+  
+  while (y <= height/2) {
+    beginShape();
+    float a = .1;
+    //calculate y based on current x
+    y = a * (x) * x + x/10;
+    //add vertex at x, y for our parabola
+    vertex(-x, y);
+    //step x to draw point a little to the right 
+    float step = 20;
+    /*
+    if (t > 4) {
+      step = .01;
+      x += step;
+    } 
+    else {
+      step = 20/(t*t*t*t);
+      x += step;
     }
+    */
+    
+    step = .01;
+    x += step;
+    
+    endShape();
   }
+  popMatrix();
 }
 
+void drawParabL(float posX, float posY) {
+  pushMatrix();
+
+  translate(posX, posY);
+  rotate(PI);
+  float x = 0;
+  float y = height/2;
+  
+  while (y <= height/2) {
+    beginShape();
+    float a = .1;
+    //calculate y based on current x
+    y = a * (x) * x + x/10;
+    //add vertex at x, y for our parabola
+    vertex(x, y);
+    //step x to draw point a little to the right 
+    float step = 20;
+    
+    /*
+    if (t > 4) {
+      step = .01;
+      x += step;
+      tester = true;
+      
+    } 
+    else {
+      step = 20/(t*t*t*t);
+      x += step;
+    }
+    */
+    
+    step = .01;
+    x += step;
+    
+    endShape();
+  }
+  popMatrix();
+}
